@@ -129,6 +129,7 @@ public class QRFormGeneratorActivity extends BaseActivity {
             if (checkedIds.isEmpty()) {
                 selectedType = null;
                 binding.btnGenerate.setEnabled(false);
+                viewModel.updateCurrentContent("");
                 return;
             }
             int checkedId = checkedIds.get(0);
@@ -140,14 +141,15 @@ public class QRFormGeneratorActivity extends BaseActivity {
                     break;
                 }
             }
+            viewModel.updateCurrentContent(formatContent());
         });
 
         // Đánh dấu QR là cũ mỗi khi input thay đổi
-        TextWatcher staleWatcher = new TextWatcher() {
+        TextWatcher draftWatcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable s) {
-                viewModel.onInputChanged();
+                viewModel.updateCurrentContent(formatContent());
             }
         };
         TextInputEditText[] allInputs = {
@@ -158,8 +160,11 @@ public class QRFormGeneratorActivity extends BaseActivity {
                 binding.editUrl
         };
         for (TextInputEditText input : allInputs) {
-            input.addTextChangedListener(staleWatcher);
+            input.addTextChangedListener(draftWatcher);
         }
+        binding.chipSecurity.setOnCheckedStateChangeListener((group, checkedIds) ->
+                viewModel.updateCurrentContent(formatContent()));
+        viewModel.updateCurrentContent(formatContent());
     }
 
     private String formatContent() {

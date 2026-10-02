@@ -23,6 +23,11 @@ public class QRGeneratorRepository {
         return provider.encode(content, width, height, format);
     }
 
+    public Bitmap generateBarcodeBitmap(String content, int width, int height, com.google.zxing.BarcodeFormat format,
+                                        int foregroundColor, int backgroundColor) throws Exception {
+        return provider.encode(content, width, height, format, foregroundColor, backgroundColor);
+    }
+
     public Uri saveBitmapToExternalStorage(Bitmap bitmap, String fileName) throws IOException {
         return storage.saveImage(bitmap, fileName);
     }

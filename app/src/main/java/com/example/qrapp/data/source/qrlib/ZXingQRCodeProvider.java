@@ -23,6 +23,12 @@ public class ZXingQRCodeProvider implements IQRCodeProvider {
 
     @Override
     public Bitmap encode(String content, int width, int height, BarcodeFormat format) throws Exception {
+        return encode(content, width, height, format, 0xFF17211B, 0xFFFFFFFF);
+    }
+
+    @Override
+    public Bitmap encode(String content, int width, int height, BarcodeFormat format,
+                         int foregroundColor, int backgroundColor) throws Exception {
         Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         if (format == BarcodeFormat.QR_CODE) {
@@ -34,7 +40,7 @@ public class ZXingQRCodeProvider implements IQRCodeProvider {
         int[] pixels = new int[width * height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                pixels[y * width + x] = matrix.get(x, y) ? 0xFF17211B : 0xFFFFFFFF;
+                pixels[y * width + x] = matrix.get(x, y) ? foregroundColor : backgroundColor;
             }
         }
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);

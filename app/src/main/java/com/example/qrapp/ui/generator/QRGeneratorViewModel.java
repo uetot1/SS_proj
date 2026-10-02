@@ -30,6 +30,8 @@ public class QRGeneratorViewModel extends ViewModel {
     private final MutableLiveData<Boolean> qrUpToDate = new MutableLiveData<>(false);
     private Bitmap currentBitmap;
     private String generatedContent;
+    private int foregroundColor = 0xFF17211B;
+    private int backgroundColor = 0xFFFFFFFF;
 
     public QRGeneratorViewModel(QRGeneratorRepository repository, HistoryRepository historyRepository) {
         this.repository = repository;
@@ -46,6 +48,19 @@ public class QRGeneratorViewModel extends ViewModel {
     public Bitmap getCurrentBitmap() { return currentBitmap; }
     public String getGeneratedContent() { return generatedContent; }
     public void setBarcodeType(BarcodeType type) { selectedBarcodeType.setValue(type); }
+    public int getForegroundColor() { return foregroundColor; }
+    public int getBackgroundColor() { return backgroundColor; }
+
+    /** Đổi màu làm mã hiện tại cũ đi, giống như đổi nội dung: phải tạo lại. */
+    public void setForegroundColor(int color) {
+        foregroundColor = color;
+        qrUpToDate.setValue(false);
+    }
+
+    public void setBackgroundColor(int color) {
+        backgroundColor = color;
+        qrUpToDate.setValue(false);
+    }
 
     /** Gọi mỗi khi người dùng thay đổi nội dung nhập để đánh dấu QR hiện tại là cũ. */
     public void onInputChanged() {
@@ -69,7 +84,8 @@ public class QRGeneratorViewModel extends ViewModel {
                     width = 1024;
                     height = 300;
                 }
-                currentBitmap = repository.generateBarcodeBitmap(text, width, height, type.getZxingFormat());
+                currentBitmap = repository.generateBarcodeBitmap(text, width, height, type.getZxingFormat(),
+                        foregroundColor, backgroundColor);
                 generatedContent = text;
                 ParsedQRContent parsed = QRContentParser.parse(text);
                 qrBitmap.postValue(currentBitmap);

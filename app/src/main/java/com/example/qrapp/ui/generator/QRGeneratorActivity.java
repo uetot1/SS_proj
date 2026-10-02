@@ -3,12 +3,15 @@ package com.example.qrapp.ui.generator;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.GridLayout;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +31,7 @@ import com.example.qrapp.util.QRActionBinder;
 import com.example.qrapp.util.ShareUtil;
 import com.example.qrapp.data.model.BarcodeType;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 public class QRGeneratorActivity extends BaseActivity {
@@ -52,6 +56,10 @@ public class QRGeneratorActivity extends BaseActivity {
 
         binding.toolbar.setNavigationContentDescription(R.string.navigate_up);
         binding.toolbar.setNavigationOnClickListener(view -> finish());
+        binding.colorForeground.setBackgroundTintList(ColorStateList.valueOf(viewModel.getForegroundColor()));
+        binding.colorBackground.setBackgroundTintList(ColorStateList.valueOf(viewModel.getBackgroundColor()));
+        binding.colorForeground.setOnClickListener(view -> showColorPicker(true));
+        binding.colorBackground.setOnClickListener(view -> showColorPicker(false));
         binding.btnGenerate.setOnClickListener(view -> {
             dismissContentInput();
             binding.inputLayout.setError(null);
@@ -71,6 +79,49 @@ public class QRGeneratorActivity extends BaseActivity {
         
         setupBarcodeTypeChips();
         observeState();
+    }
+
+    private static final int[] PRESET_COLORS = {
+        0xFF000000, 0xFF17211B, 0xFF1A237E, 0xFF0D47A1,
+        0xFF006064, 0xFF1B5E20, 0xFF33691E, 0xFFE65100,
+        0xFFBF360C, 0xFF880E4F, 0xFF4A148C, 0xFF311B92,
+        0xFFFFFFFF, 0xFFF5F5F5, 0xFFFFF8E1, 0xFFE8F5E9,
+        0xFFE3F2FD, 0xFFFCE4EC, 0xFFEDE7F6, 0xFFE0F2F1
+    };
+
+    private void showColorPicker(boolean isForeground) {
+        GridLayout grid = new GridLayout(this);
+        grid.setColumnCount(4);
+        grid.setPadding(32, 32, 32, 32);
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.color_picker_title)
+                .setView(grid)
+                .create();
+        float density = getResources().getDisplayMetrics().density;
+        int size = (int) (48 * density);
+        int margin = (int) (8 * density);
+        for (int color : PRESET_COLORS) {
+            View swatch = new View(this);
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = size;
+            params.height = size;
+            params.setMargins(margin, margin, margin, margin);
+            swatch.setLayoutParams(params);
+            swatch.setBackgroundResource(R.drawable.bg_soft_circle);
+            swatch.setBackgroundTintList(ColorStateList.valueOf(color));
+            swatch.setOnClickListener(view -> {
+                if (isForeground) {
+                    viewModel.setForegroundColor(color);
+                    binding.colorForeground.setBackgroundTintList(ColorStateList.valueOf(color));
+                } else {
+                    viewModel.setBackgroundColor(color);
+                    binding.colorBackground.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
+                dialog.dismiss();
+            });
+            grid.addView(swatch);
+        }
+        dialog.show();
     }
 
     private void setupBarcodeTypeChips() {

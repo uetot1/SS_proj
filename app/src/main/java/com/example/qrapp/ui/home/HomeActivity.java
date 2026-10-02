@@ -47,6 +47,7 @@ public class HomeActivity extends BaseActivity {
         binding.cardCameraScan.setOnClickListener(view -> startActivity(new Intent(this, CameraScannerActivity.class)));
         binding.cardFormGenerate.setOnClickListener(view -> startActivity(new Intent(this, QRFormGeneratorActivity.class)));
         binding.cardScan.setOnClickListener(view -> startActivity(new Intent(this, QRScannerActivity.class)));
+        binding.cardBatchScan.setOnClickListener(view -> startActivity(new Intent(this, com.example.qrapp.ui.batchscan.BatchScanActivity.class)));
         binding.cardHistory.setOnClickListener(view -> startActivity(new Intent(this, HistoryActivity.class)));
 
         historyRepository = new HistoryRepository(this, new HistorySqliteDataSource(this));

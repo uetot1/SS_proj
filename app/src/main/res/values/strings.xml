@@ -124,4 +124,11 @@
     <string name="form_error_phone">Vui lòng nhập số điện thoại</string>
     <string name="form_error_url">Vui lòng nhập đường dẫn URL</string>
     <string name="form_error_sms_phone">Vui lòng nhập số điện thoại nhận</string>
+    <string name="batch_scan_title">Quét liên tục</string>
+    <string name="batch_scan_description">Quét nhiều mã QR liên tiếp bằng camera</string>
+    <string name="batch_scan_counter">Đã quét: %d mã</string>
+    <string name="batch_scan_start">Bắt đầu quét</string>
+    <string name="batch_scan_done">Hoàn tất</string>
+    <string name="batch_scan_empty">Chưa quét mã nào. Nhấn "Bắt đầu quét" để bắt đầu.</string>
+    <string name="batch_scan_error">Không thể lưu kết quả quét</string>
 </resources>

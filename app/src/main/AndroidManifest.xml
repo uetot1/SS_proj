@@ -19,6 +19,7 @@
         <activity android:name=".ui.generator.QRFormGeneratorActivity" android:exported="false" />
         <activity android:name=".ui.history.HistoryActivity" android:exported="false" />
         <activity android:name=".ui.detail.QRDetailActivity" android:exported="false" />
+        <activity android:name=".ui.batchscan.BatchScanActivity" android:exported="false" />
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true">
